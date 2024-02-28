@@ -1,37 +1,82 @@
-# SpringboardVR Python Wrapper
+# springboardvr: Python library for interacting with Springboard VR API
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+This library provides Python functions to interact with the Springboard VR API for managing sessions and other functionalities.
 
-A Python wrapper for SpringboardVR's API.
+| IMPORTANT: In its current state, this package can only manage sessions. See [Usage](#usage) below.
 
-> THIS PROJECT IS BRAND NEW AND IN EARLY ACCESS.
+## Requirements
+
+- Python 3.9+
 
 ## Installation
 
-You can install the package via pip:
-
-```shell
+```Bash
 pip install springboardvr
 ```
 
 ## Usage
 
+### Import the library:
+
 ```python
-from springboardvr import client
-
-# Login using your SpringboardVR credentials.
-client.login("example@email.com", "yourpassword")
-
+import springboardvr
 ```
 
-## Documentation
+### Create a client object:
 
-For detailed documentation, including API reference and usage examples, please visit the [SpringboardVR Python Wrapper Documentation](https://your-documentation-url.com) (COMING SOON).
+```python
+client = springboardvr.SpringboardVR(account_email="your_email@example.com", account_password="your_password")
+```
 
-## Contributing
+### Create a new booking session:
 
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+```python
+location_id = "1234"  # Replace with your location ID
+experience_id = "5678"  # Replace with your experience ID
+station_id = "9012"  # Replace with your station ID
+experience_start_time = datetime.datetime(2024, 3, 1, 10, 0)  # Replace with your start time
+duration = 60  # Duration in minutes
 
-## License
+booking_id, station_session_id = client.sessions.create_session(
+    location_id, experience_id, station_id, experience_start_time, duration
+)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+print(f"Booking ID: {booking_id}")
+print(f"Station Session ID: {station_session_id}")
+```
+
+### Update an existing booking session:
+
+```python
+booking_id = "your_booking_id"
+station_session_id = "your_station_session_id"
+new_start_time = datetime.datetime(2024, 3, 2, 11, 0)
+new_duration = 30
+
+client.sessions.update_session(booking_id, station_session_id, new_start_time, new_duration)
+```
+
+### Delete a booking session:
+
+```python
+booking_id = "your_booking_id"
+
+client.sessions.delete_session(booking_id)
+```
+
+### Start a booking session:
+
+```python
+booking_id = "your_booking_id"
+station_id = "your_station_id"
+station_session_id = "your_station_session_id"
+experience_start_time = datetime.datetime(2024, 3, 1, 10, 0)
+duration = 60
+
+start_time, end_time = client.sessions.start_session(
+    booking_id, station_id, station_session_id, experience_start_time, duration
+)
+
+print(f"Session started at: {start_time}")
+print(f"Session ends at: {end_time}")
+```
